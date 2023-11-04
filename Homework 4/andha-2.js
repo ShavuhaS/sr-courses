@@ -68,24 +68,11 @@ const testCases = [
   ["norm", a],
   ["add", a, c],
 ];
+
 testCases.forEach( (args) => {
   let [name, op1, op2] = args;
-  let result;
-  switch(name) {
-    case 'add':
-      result = op1.add(op2);
-      break;
-    case 'subtract':
-      result = op1.subtract(op2);
-      break;
-    case 'dot':
-      result = op1.dot(op2);
-      break;
-    case 'norm':
-      result = op1.norm();
-      break;
-    default:
-      result = 'bruh';
-  }
-    console.log(`${name}(${op1}${op2 ? `, ${op2}` : ''}) = ${result}`);
+  let result = op1[name](op2);
+  
+  console.log(`${name}(${op1}${op2 ? `, ${op2}` : ''}) = ${result}`);
 });
+

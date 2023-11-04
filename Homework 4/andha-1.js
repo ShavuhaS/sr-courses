@@ -38,18 +38,14 @@ function VigenèreCipher(key, abc) {
 
 const obj = new VigenèreCipher("password", "abcdefghijklmnopqrstuvwxyz");
 const testCases = [
-	["codewars", 'e'],
-	["rovwsoiv", 'd'],
-	["waffles", 'e'],
-	["laxxhsj", 'd'],
-	["CODEWARS", 'e'],
-	["CODEWARS", 'd'],
+	["codewars", 'encode'],
+	["rovwsoiv", 'decode'],
+	["waffles", 'encode'],
+	["laxxhsj", 'decode'],
+	["CODEWARS", 'encode'],
+	["CODEWARS", 'decode'],
 ];
 testCases.forEach( (pair) => {
 	let [str, mode] = pair;
-	if(mode === 'e') {
-		console.log(`obj.encode(${str}) = ${obj.encode(str)}`);
-	} else {
-		console.log(`obj.decode(${str}) = ${obj.decode(str)}`);
-	}
+	console.log(`obj.${mode}(${str}) = ${obj[mode](str)}`);
 });

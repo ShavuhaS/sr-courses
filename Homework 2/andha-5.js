@@ -7,7 +7,7 @@ function getRootProperty(obj, num) {
 		if(Array.isArray(obj) && obj.includes(el)) return true;
 
 		for(let key in obj) {
-			if(hasEl(obj[key], num)) return true;
+			if(hasEl(obj[key], el)) return true;
 		}
 
 		return false;

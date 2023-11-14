@@ -4,7 +4,7 @@ function councilHonor(arr, d) {
 	const groups = arr.length / d;
 	let maxSum = 0;
 	for(let start = 0; start < groups; start++) {
-		let sum = 0;
+		let sum = -Infinity;
 		for(let i = start; i < arr.length; i += groups) {
 			sum += arr[i];
 		}

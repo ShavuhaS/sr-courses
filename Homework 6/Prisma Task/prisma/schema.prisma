@@ -1,0 +1,107 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Sex {
+  MALE
+  FEMALE
+}
+
+model Customer {
+  customerId       Int       @id @default(autoincrement()) @map("customer_id")
+  phoneNumber      String    @unique @map("phone_number")
+  password         String
+  sex              Sex
+  firstName        String    @map("first_name")
+  middleName       String    @map("middle_name")
+  lastName         String    @map("last_name")
+  joinDate         DateTime  @default(now()) @map("join_date")
+  packagesSent     Package[] @relation("Send")
+  packagesReceived Package[] @relation("Receive")
+}
+
+enum PackageStatus {
+  PROCESSED
+  DELIVERING
+  DELIVERED
+  RECEIVED
+}
+
+model Package {
+  packageId         Int           @id @default(autoincrement()) @map("package_id")
+  weight            Float
+  type              String
+  dimensions        String
+  status            PackageStatus @default(PROCESSED)
+  departureDate     DateTime?     @map("departure_date")
+  sender            Customer      @relation("Send", fields: [senderId], references: [customerId])
+  senderId          Int           @map("sender_id")
+  recipient         Customer      @relation("Receive", fields: [recipientId], references: [customerId])
+  recipientId       Int           @map("recipient_id")
+  branchSender      Branch        @relation("SenderBranch", fields: [branchSenderId], references: [branchId])
+  branchSenderId    Int           @map("branch_sender_id")
+  branchRecipient   Branch        @relation("RecipientBranch", fields: [branchRecipientId], references: [branchId])
+  branchRecipientId Int           @map("branch_recipient_id")
+  carrierVehicle    Vehicle       @relation(fields: [carrierId], references: [vehicleId])
+  carrierId         Int           @map("carrier_id")
+}
+
+model Employee {
+  empId         Int        @id @default(autoincrement()) @map("emp_id")
+  sex           Sex
+  firstName     String     @map("first_name")
+  middleName    String     @map("middle_name")
+  lastName      String     @map("last_name")
+  salary        Int
+  birthDate     DateTime   @map("birth_date")
+  supervisor    Employee?  @relation("Supervision", fields: [superId], references: [empId])
+  superId       Int?       @map("super_id")
+  supervisees   Employee[] @relation("Supervision")
+  branch        Branch     @relation("Branch-Employees", fields: [branchId], references: [branchId])
+  branchId      Int        @map("branch_id")
+  managesBranch Branch?    @relation("Manager")
+  vehicle       Vehicle?
+}
+
+model Branch {
+  branchId         Int        @id @default(autoincrement()) @map("branch_id")
+  branchName       String     @map("branch_name")
+  employees        Employee[] @relation("Branch-Employees")
+  manager          Employee?  @relation("Manager", fields: [managerId], references: [empId])
+  managerId        Int?       @unique @map("manager_id")
+  packagesSent     Package[]  @relation("SenderBranch")
+  packagesReceived Package[]  @relation("RecipientBranch")
+}
+
+enum VehicleStatus {
+  IDLE
+  DELIVERING
+  OUT_OF_ORDER
+}
+
+model Vehicle {
+  vehicleId    Int             @id @default(autoincrement()) @map("vehicle_id")
+  status       VehicleStatus
+  purchaseDate DateTime        @default(now()) @map("purchase_date")
+  model        String
+  location     String?
+  routes       ShipmentRoute[]
+  driver       Employee        @relation(fields: [driverId], references: [empId])
+  driverId     Int             @unique @map("driver_id")
+  packages     Package[]
+}
+
+model ShipmentRoute {
+  routeId       Int       @id @default(autoincrement()) @map("route_id")
+  departureCity String    @map("departure_city")
+  arrivalCity   String    @map("arrival_city")
+  vehicles      Vehicle[]
+}

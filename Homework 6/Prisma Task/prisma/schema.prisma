@@ -75,8 +75,8 @@ model Branch {
   branchId         Int        @id @default(autoincrement()) @map("branch_id")
   branchName       String     @map("branch_name")
   employees        Employee[] @relation("Branch-Employees")
-  manager          Employee   @relation("Manager", fields: [managerId], references: [empId])
-  managerId        Int        @unique @map("manager_id")
+  manager          Employee?  @relation("Manager", fields: [managerId], references: [empId])
+  managerId        Int?       @unique @map("manager_id")
   packagesSent     Package[]  @relation("SenderBranch")
   packagesReceived Package[]  @relation("RecipientBranch")
 }

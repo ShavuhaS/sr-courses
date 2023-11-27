@@ -56,7 +56,7 @@ model Order {
   employee        Employee         @relation(fields: [employeeId], references: [employeeId])
   employeeId      Int              @map("employee_id")
   customer        Customer         @relation(fields: [customerId], references: [customerId])
-  customerId      Int
+  customerId      Int              @map("customer_id")
   orderAddress    String           @map("order_address")
   deliveryCost    Float            @default(0) @map("delivery_cost")
   orderDate       DateTime         @default(now()) @map("order_date")

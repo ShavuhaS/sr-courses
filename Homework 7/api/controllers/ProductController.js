@@ -25,7 +25,6 @@ export class ProductController {
                 });
             })
             .catch((err) => {
-                console.log(err);
                 next(new HttpError(403, 'Invalid product category'));
             });
     }

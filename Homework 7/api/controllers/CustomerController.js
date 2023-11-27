@@ -5,9 +5,7 @@ import { validateId } from '../../utils/validation/validateId.js'
 export class CustomerController {
     async getCustomerOrdersWithTotal(req, res, next) {
         const id = Number(req.params.id);
-        if(!validateId(id)) {
-            return next(new HttpError(400, "Invalid id. The id should be a positive 32-bit integer."));
-        }
+        if(!validateId(id)) return next(HttpError.invalidIntegerId());
 
         try {
             const ordersWithTotal = await customerService.getCustomerOrdersWithTotal(id);

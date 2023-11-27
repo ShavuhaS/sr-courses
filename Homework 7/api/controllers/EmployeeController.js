@@ -1,11 +1,15 @@
 import employeeService from '../services/EmployeeService.js'
 import { HttpError } from '../../utils/HttpError.js'
 import { validateId } from '../../utils/validation/validateId.js'
+import { validateUpdateEmployeeBody } from '../../utils/validation/validateUpdateEmployeeBody.js'
 
 export class EmployeeController {
     async update(req, res, next) {
         const id = Number(req.params.id);
-        if(!validateId(id)) return next(new HttpError(400, 'Invalid id. The id should be a positive 32bit integer'));
+        if(!validateId(id)) return next(HttpError.invalidIntegerId());
+
+        const error = validateUpdateEmployeeBody(req.body);
+        if(error) return next(new HttpError(400, error));
 
         const body = {
             firstName: req.body.firstName,
@@ -15,6 +19,11 @@ export class EmployeeController {
         }
         await employeeService.update(id, body)
             .then((updatedEmployee) => {
+                const {employeeId, ...remainder} = updatedEmployee;
+                updatedEmployee = {
+                    id: employeeId,
+                    ...remainder
+                }
                 res.status(200).json(updatedEmployee);
             })
             .catch((err) => {
